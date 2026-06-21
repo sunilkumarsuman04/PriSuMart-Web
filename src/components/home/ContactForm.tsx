@@ -5,15 +5,41 @@ import { Button } from '../ui/Button';
 export function ContactForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     setIsSubmitting(true);
-    // Frontend-only placeholder: wire this up to an email service or API later.
-    setTimeout(() => {
+    setError('');
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch(
+        'https://formspree.io/f/xaqgwbjk',
+        {
+          method: 'POST',
+          body: formData,
+          headers: {
+            Accept: 'application/json',
+          },
+        }
+      );
+
+      if (response.ok) {
+        form.reset();
+        setIsSubmitted(true);
+      } else {
+        setError('Failed to send message. Please try again.');
+      }
+    } catch (error) {
+      console.error(error);
+      setError('Something went wrong. Please try again.');
+    } finally {
       setIsSubmitting(false);
-      setIsSubmitted(true);
-    }, 900);
+    }
   };
 
   if (isSubmitted) {
@@ -23,7 +49,9 @@ export function ContactForm() {
         className="flex flex-col items-center justify-center text-center gap-3 py-12 px-6 rounded-2xl bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800"
       >
         <HiOutlineCheckCircle className="text-5xl text-brand-600 dark:text-brand-400" />
-        <h3 className="text-xl font-bold text-ink-900 dark:text-cream-50">Message sent</h3>
+        <h3 className="text-xl font-bold text-ink-900 dark:text-cream-50">
+          Message sent
+        </h3>
         <p className="text-ink-800/70 dark:text-cream-50/65 max-w-sm">
           Thanks for reaching out — our team will get back to you shortly.
         </p>
@@ -38,10 +66,17 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-5" aria-label="Contact form">
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-5"
+      aria-label="Contact form"
+    >
       <div className="grid sm:grid-cols-2 gap-5">
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="name" className="text-sm font-semibold text-ink-900 dark:text-cream-50">
+          <label
+            htmlFor="name"
+            className="text-sm font-semibold text-ink-900 dark:text-cream-50"
+          >
             Full name
           </label>
           <input
@@ -54,8 +89,12 @@ export function ContactForm() {
             className="px-4 py-3 rounded-xl border border-ink-900/10 dark:border-white/15 bg-white dark:bg-ink-900 text-ink-900 dark:text-cream-50 placeholder:text-ink-800/35 dark:placeholder:text-cream-50/30 focus:border-brand-500 outline-none transition-colors min-h-[44px]"
           />
         </div>
+
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="email" className="text-sm font-semibold text-ink-900 dark:text-cream-50">
+          <label
+            htmlFor="email"
+            className="text-sm font-semibold text-ink-900 dark:text-cream-50"
+          >
             Email address
           </label>
           <input
@@ -71,7 +110,10 @@ export function ContactForm() {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="subject" className="text-sm font-semibold text-ink-900 dark:text-cream-50">
+        <label
+          htmlFor="subject"
+          className="text-sm font-semibold text-ink-900 dark:text-cream-50"
+        >
           Subject
         </label>
         <input
@@ -85,7 +127,10 @@ export function ContactForm() {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="message" className="text-sm font-semibold text-ink-900 dark:text-cream-50">
+        <label
+          htmlFor="message"
+          className="text-sm font-semibold text-ink-900 dark:text-cream-50"
+        >
           Message
         </label>
         <textarea
@@ -97,6 +142,12 @@ export function ContactForm() {
           className="px-4 py-3 rounded-xl border border-ink-900/10 dark:border-white/15 bg-white dark:bg-ink-900 text-ink-900 dark:text-cream-50 placeholder:text-ink-800/35 dark:placeholder:text-cream-50/30 focus:border-brand-500 outline-none transition-colors resize-none"
         />
       </div>
+
+      {error && (
+        <p className="text-red-500 text-sm">
+          {error}
+        </p>
+      )}
 
       <Button type="submit" size="lg" disabled={isSubmitting} fullWidth>
         {isSubmitting ? 'Sending...' : 'Send Message'}
