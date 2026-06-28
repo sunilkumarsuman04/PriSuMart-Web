@@ -1,5 +1,5 @@
-import type { IncomingMessage, ServerResponse } from 'node:http';
-import { buildSystemPrompt } from '../src/chatbot/systemPrompt';
+import type { IncomingMessage, ServerResponse } from 'http';
+import { buildSystemPrompt } from '../src/chatbot/systemPrompt.js';
 
 /**
  * Minimal local types matching the shape Vercel's Node.js runtime adds on top

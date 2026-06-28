@@ -1,4 +1,4 @@
-import { KNOWLEDGE_BASE } from './knowledge';
+import { KNOWLEDGE_BASE } from './knowledge.js';
 
 /**
  * Builds the system prompt for PriSu AI. Kept as a pure function (no I/O)
