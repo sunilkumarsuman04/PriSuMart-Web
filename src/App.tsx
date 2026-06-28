@@ -8,6 +8,7 @@ import { HomePage } from './pages/HomePage';
 
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage').then((m) => ({ default: m.PrivacyPolicyPage })));
 const TermsPage = lazy(() => import('./pages/TermsPage').then((m) => ({ default: m.TermsPage })));
+const ChatWidget = lazy(() => import('./chatbot/components/ChatWidget'));
 
 function App() {
   return (
@@ -26,6 +27,9 @@ function App() {
             </Routes>
           </Suspense>
           <Footer />
+          <Suspense fallback={null}>
+            <ChatWidget />
+          </Suspense>
         </BrowserRouter>
       </ThemeProvider>
     </HelmetProvider>
