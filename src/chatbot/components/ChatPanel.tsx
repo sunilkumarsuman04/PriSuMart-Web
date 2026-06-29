@@ -159,7 +159,6 @@ export function ChatPanel({ onClose, panelId }: ChatPanelProps) {
     return -1;
   })();
 
-  // Use clean dynamic classes separating desktop design and mobile layout safely
   const panelClass = isMobile
     ? "fixed left-0 right-0 z-[100] w-full flex flex-col rounded-none overflow-hidden bg-white dark:bg-ink-900 border-none shadow-none transition-colors duration-300"
     : "fixed bottom-[calc(6rem+env(safe-area-inset-bottom))] right-3 left-3 sm:left-auto sm:right-6 z-[90] w-auto sm:w-[380px] lg:w-[400px] h-[min(640px,75dvh)] max-h-[calc(100dvh-7rem-env(safe-area-inset-bottom))] flex flex-col rounded-3xl overflow-hidden bg-white dark:bg-ink-900 shadow-2xl border border-ink-900/5 dark:border-white/10 transition-colors duration-300";
@@ -178,11 +177,11 @@ export function ChatPanel({ onClose, panelId }: ChatPanelProps) {
       className={panelClass}
       style={isMobile ? viewportStyle : undefined}
     >
-      {/* Header with mobile safe area top padding */}
-      <div className="flex items-center justify-between gap-1.5 xs:gap-2 sm:gap-2 lg:gap-3 px-3 xs:px-3.5 sm:px-3.5 lg:px-4 pt-[calc(0.75rem+env(safe-area-inset-top))] pb-3 md:py-3.5 bg-grad-brand shrink-0">
-        <div className="flex items-center gap-1.5 xs:gap-2 sm:gap-2 lg:gap-2.5 min-w-0">
-          {/* Logo in white circular container */}
-          <div className="flex items-center justify-center h-8 w-8 xs:h-9 xs:w-9 sm:h-10 sm:w-10 rounded-full bg-white shrink-0 p-[4px] xs:p-[5px] sm:p-[6px]">
+      {/* Redesigned Premium Header */}
+      <div className="flex items-center justify-between gap-3 px-4 md:px-3.5 lg:px-4 h-[calc(64px+env(safe-area-inset-top))] pt-[env(safe-area-inset-top)] md:h-auto md:pt-3.5 md:pb-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-900 dark:to-teal-950 bg-grad-brand shrink-0 shadow-sm border-b border-white/5 transition-colors duration-300">
+        <div className="flex items-center gap-3 md:gap-2 lg:gap-2.5 min-w-0">
+          {/* Logo in premium circular container with a subtle shadow */}
+          <div className="flex items-center justify-center h-12 w-12 md:h-10 md:w-10 rounded-full bg-white shrink-0 shadow-sm md:shadow-none p-1.5 md:p-[6px]">
             <picture>
               <source srcSet={logoIconWebp} type="image/webp" />
               <img
@@ -197,42 +196,43 @@ export function ChatPanel({ onClose, panelId }: ChatPanelProps) {
             </picture>
           </div>
 
-          {/* Divider */}
-          <div className="hidden xs:block w-px h-6 sm:h-7 bg-white/30 shrink-0" aria-hidden="true" />
+          {/* Divider (Hidden on mobile, preserved on desktop) */}
+          <div className="hidden md:block w-px h-7 bg-white/30 shrink-0" aria-hidden="true" />
 
-          {/* AI bot badge */}
-          <div className="hidden xs:flex items-center justify-center h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-white/15 shrink-0">
-            <LuBot className="text-lg sm:text-xl text-white" aria-hidden="true" />
+          {/* AI bot badge (Hidden on mobile, preserved on desktop) */}
+          <div className="hidden md:flex items-center justify-center h-10 w-10 rounded-full bg-white/15 shrink-0">
+            <LuBot className="text-xl text-white" aria-hidden="true" />
           </div>
 
           <div className="flex flex-col justify-center gap-[3px] min-w-0">
-            <span className="font-display font-bold text-white text-[13px] xs:text-sm sm:text-[15px] leading-tight truncate">
+            <span className="font-display font-bold text-white text-[20px] md:text-[15px] leading-tight truncate">
               PriSu AI
             </span>
-            <span className="text-[10.5px] xs:text-[11px] sm:text-[11px] lg:text-[11.5px] text-white/75 leading-tight truncate">
+            <span className="text-[12px] md:text-[11.5px] font-medium md:font-normal text-white/80 md:text-white/75 leading-tight truncate">
               PriSuMart customer support
             </span>
           </div>
         </div>
 
-        <div className="flex items-center gap-0.5 shrink-0">
+        {/* Action icons with large touch areas and clear alignment */}
+        <div className="flex items-center gap-3 md:gap-0.5 shrink-0">
           <button
             type="button"
             onClick={clearMessages}
             disabled={messages.length === 0}
             aria-label="Clear chat"
             title="Clear chat"
-            className="flex items-center justify-center h-8 w-8 xs:h-9 xs:w-9 rounded-full text-white/85 hover:bg-white/15 active:bg-white/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex items-center justify-center h-11 w-11 md:h-9 md:w-9 rounded-full text-white/85 hover:bg-white/15 active:bg-white/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            <HiOutlineTrash className="text-base xs:text-lg" />
+            <HiOutlineTrash className="text-[21px] md:text-lg" />
           </button>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close chat"
-            className="flex items-center justify-center h-8 w-8 xs:h-9 xs:w-9 rounded-full text-white/85 hover:bg-white/15 active:bg-white/20 transition-colors"
+            className="flex items-center justify-center h-11 w-11 md:h-9 md:w-9 rounded-full text-white/85 hover:bg-white/15 active:bg-white/20 transition-colors"
           >
-            <HiOutlineXMark className="text-lg xs:text-xl" />
+            <HiOutlineXMark className="text-[22px] md:text-xl" />
           </button>
         </div>
       </div>
@@ -269,7 +269,7 @@ export function ChatPanel({ onClose, panelId }: ChatPanelProps) {
         {isSending && <TypingIndicator />}
       </div>
 
-      {/* Input Form with safe area bottom padding */}
+      {/* Input */}
       <form
         onSubmit={handleSubmit}
         className="flex items-end gap-[5px] sm:gap-2 p-[9px] max-[330px]:p-2 sm:p-2.5 lg:p-3 pb-[calc(0.5625rem+env(safe-area-inset-bottom))] sm:pb-2.5 lg:pb-3 border-t border-ink-900/5 dark:border-white/10 shrink-0 bg-white dark:bg-ink-900 transition-colors duration-300"
