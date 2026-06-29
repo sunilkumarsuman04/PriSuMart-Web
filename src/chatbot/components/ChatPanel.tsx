@@ -23,20 +23,115 @@ export function ChatPanel({ onClose, panelId }: ChatPanelProps) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to the latest message.
+  const [isMobile, setIsMobile] = useState(false);
+  const [viewportStyle, setViewportStyle] = useState<React.CSSProperties>({});
+
+  // Detect mobile width dynamically (< 768px matches Tailwind's md breakpoint)
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
+    if (typeof window === 'undefined') return;
+    const mediaQuery = window.matchMedia('(max-width: 767px)');
+    const handleResize = () => setIsMobile(mediaQuery.matches);
+    handleResize();
+    mediaQuery.addEventListener('change', handleResize);
+    return () => mediaQuery.removeEventListener('change', handleResize);
+  }, []);
+
+  // Sync visual viewport on mobile to handle dynamic keyboards without pushing elements offscreen
+  useEffect(() => {
+    if (!isMobile) {
+      setViewportStyle({});
+      return;
+    }
+
+    const updateViewport = () => {
+      const vv = window.visualViewport;
+      if (vv) {
+        setViewportStyle({
+          height: `${vv.height}px`,
+          top: `${vv.offsetTop}px`,
+        });
+      } else {
+        setViewportStyle({
+          height: '100dvh',
+          top: '0px',
+        });
+      }
+    };
+
+    updateViewport();
+    window.visualViewport?.addEventListener('resize', updateViewport);
+    window.visualViewport?.addEventListener('scroll', updateViewport);
+
+    return () => {
+      window.visualViewport?.removeEventListener('resize', updateViewport);
+      window.visualViewport?.removeEventListener('scroll', updateViewport);
+    };
+  }, [isMobile]);
+
+  // Lock document body scroll on mobile while the chat is open
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const mediaQuery = window.matchMedia('(max-width: 767px)');
+    const handleScrollLock = (isMobileView: boolean) => {
+      if (isMobileView) {
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
+      }
+    };
+
+    handleScrollLock(mediaQuery.matches);
+
+    const listener = (e: MediaQueryListEvent) => {
+      handleScrollLock(e.matches);
+    };
+    mediaQuery.addEventListener('change', listener);
+
+    return () => {
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+      mediaQuery.removeEventListener('change', listener);
+    };
+  }, []);
+
+  const scrollToBottom = (behavior: 'smooth' | 'auto' = 'smooth') => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({
+        top: scrollRef.current.scrollHeight,
+        behavior,
+      });
+    }
+  };
+
+  // Auto-scroll on new messages or typing indicator activity
+  useEffect(() => {
+    scrollToBottom('smooth');
   }, [messages, isSending]);
 
-  // Focus the input when the panel mounts; close on Escape.
+  // Automatically scroll down when the virtual keyboard opens or closes
   useEffect(() => {
-    inputRef.current?.focus();
+    if (isMobile) {
+      const timer = setTimeout(() => {
+        scrollToBottom('auto');
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [viewportStyle.height, isMobile]);
+
+  // Focus the input when the panel mounts (Desktop only); close on Escape
+  useEffect(() => {
+    if (!isMobile) {
+      inputRef.current?.focus();
+    }
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
+  }, [onClose, isMobile]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,6 +159,11 @@ export function ChatPanel({ onClose, panelId }: ChatPanelProps) {
     return -1;
   })();
 
+  // Use clean dynamic classes separating desktop design and mobile layout safely
+  const panelClass = isMobile
+    ? "fixed left-0 right-0 z-[100] w-full flex flex-col rounded-none overflow-hidden bg-white dark:bg-ink-900 border-none shadow-none transition-colors duration-300"
+    : "fixed bottom-[calc(6rem+env(safe-area-inset-bottom))] right-3 left-3 sm:left-auto sm:right-6 z-[90] w-auto sm:w-[380px] lg:w-[400px] h-[min(640px,75dvh)] max-h-[calc(100dvh-7rem-env(safe-area-inset-bottom))] flex flex-col rounded-3xl overflow-hidden bg-white dark:bg-ink-900 shadow-2xl border border-ink-900/5 dark:border-white/10 transition-colors duration-300";
+
   return (
     <motion.div
       ref={panelRef}
@@ -71,14 +171,15 @@ export function ChatPanel({ onClose, panelId }: ChatPanelProps) {
       role="dialog"
       aria-modal="false"
       aria-label="PriSu AI customer support chat"
-      initial={{ opacity: 0, y: 24, scale: 0.96 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 24, scale: 0.96 }}
+      initial={isMobile ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.96 }}
+      animate={isMobile ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
+      exit={isMobile ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.96 }}
       transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-      className="fixed bottom-[calc(6rem+env(safe-area-inset-bottom))] right-3 left-3 sm:left-auto sm:right-6 z-[90] w-auto sm:w-[380px] lg:w-[400px] h-[min(640px,75dvh)] max-h-[calc(100dvh-7rem-env(safe-area-inset-bottom))] flex flex-col rounded-3xl overflow-hidden bg-white dark:bg-ink-900 shadow-2xl border border-ink-900/5 dark:border-white/10 transition-colors duration-300"
+      className={panelClass}
+      style={isMobile ? viewportStyle : undefined}
     >
-      {/* Header */}
-      <div className="flex items-center justify-between gap-1.5 xs:gap-2 sm:gap-2 lg:gap-3 px-3 xs:px-3.5 sm:px-3.5 lg:px-4 py-3 sm:py-3.5 bg-grad-brand shrink-0">
+      {/* Header with mobile safe area top padding */}
+      <div className="flex items-center justify-between gap-1.5 xs:gap-2 sm:gap-2 lg:gap-3 px-3 xs:px-3.5 sm:px-3.5 lg:px-4 pt-[calc(0.75rem+env(safe-area-inset-top))] pb-3 md:py-3.5 bg-grad-brand shrink-0">
         <div className="flex items-center gap-1.5 xs:gap-2 sm:gap-2 lg:gap-2.5 min-w-0">
           {/* Logo in white circular container */}
           <div className="flex items-center justify-center h-8 w-8 xs:h-9 xs:w-9 sm:h-10 sm:w-10 rounded-full bg-white shrink-0 p-[4px] xs:p-[5px] sm:p-[6px]">
@@ -168,7 +269,7 @@ export function ChatPanel({ onClose, panelId }: ChatPanelProps) {
         {isSending && <TypingIndicator />}
       </div>
 
-      {/* Input */}
+      {/* Input Form with safe area bottom padding */}
       <form
         onSubmit={handleSubmit}
         className="flex items-end gap-[5px] sm:gap-2 p-[9px] max-[330px]:p-2 sm:p-2.5 lg:p-3 pb-[calc(0.5625rem+env(safe-area-inset-bottom))] sm:pb-2.5 lg:pb-3 border-t border-ink-900/5 dark:border-white/10 shrink-0 bg-white dark:bg-ink-900 transition-colors duration-300"
