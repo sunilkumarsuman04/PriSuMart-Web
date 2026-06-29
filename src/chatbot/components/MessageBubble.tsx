@@ -32,7 +32,7 @@ export function MessageBubble({ message, isLastModelMessage, onRegenerate, regen
             ? 'bg-grad-brand text-white rounded-2xl rounded-br-md'
             : message.error
               ? 'bg-red-50 text-red-800 dark:bg-red-950/40 dark:text-red-300 rounded-2xl rounded-bl-md'
-              : 'bg-brand-50 dark:bg-white/8 text-ink-900 dark:text-cream-50 rounded-2xl rounded-bl-md'
+              : 'bg-brand-50 dark:bg-white/10 text-ink-900 dark:text-cream-50 rounded-2xl rounded-bl-md'
         }`}
       >
         {isUser ? (
@@ -48,7 +48,7 @@ export function MessageBubble({ message, isLastModelMessage, onRegenerate, regen
             type="button"
             onClick={handleCopy}
             aria-label="Copy message"
-            className="flex items-center justify-center h-8 w-8 rounded-full text-ink-800/50 dark:text-cream-50/50 hover:bg-ink-900/5 dark:hover:bg-white/10 hover:text-ink-800 dark:hover:text-cream-50 transition-colors"
+            className="flex items-center justify-center h-8 w-8 rounded-full text-ink-800/50 dark:text-cream-50/50 hover:bg-ink-900/5 dark:hover:bg-white/10 hover:text-ink-800 dark:hover:text-cream-50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 dark:focus-visible:outline-brand-300"
           >
             {copied ? <HiOutlineCheck className="text-base text-brand-600" /> : <HiOutlineClipboard className="text-base" />}
           </button>
@@ -59,7 +59,7 @@ export function MessageBubble({ message, isLastModelMessage, onRegenerate, regen
               onClick={onRegenerate}
               disabled={regenerateDisabled}
               aria-label="Regenerate response"
-              className="flex items-center justify-center h-8 w-8 rounded-full text-ink-800/50 dark:text-cream-50/50 hover:bg-ink-900/5 dark:hover:bg-white/10 hover:text-ink-800 dark:hover:text-cream-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              className="flex items-center justify-center h-8 w-8 rounded-full text-ink-800/50 dark:text-cream-50/50 hover:bg-ink-900/5 dark:hover:bg-white/10 hover:text-ink-800 dark:hover:text-cream-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 dark:focus-visible:outline-brand-300"
             >
               <HiOutlineArrowPath className="text-base" />
             </button>

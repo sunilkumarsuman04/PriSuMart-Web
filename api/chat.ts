@@ -1,40 +1,21 @@
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { buildSystemPrompt } from "../src/chatbot/systemPrompt.js";
 
 const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
+
+const GEMINI_URL =
+  `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 const MAX_MESSAGES = 30;
 const MAX_MESSAGE_LENGTH = 4000;
 const REQUEST_TIMEOUT_MS = 20000;
 
 const FRIENDLY_FALLBACK =
-  "Sorry, I'm having trouble responding right now. Please try again in a moment.";
+  "Sorry, I couldn't reach PriSuMart support right now. Please try again in a moment.";
 
 interface ChatMessage {
   role: "user" | "model";
   text: string;
-}
-
-interface GeminiResponse {
-  candidates?: Array<{
-    finishReason?: string;
-    content?: {
-      parts?: Array<{
-        text?: string;
-      }>;
-    };
-  }>;
-}
-
-function isChatMessage(value: unknown): value is ChatMessage {
-  if (!value || typeof value !== "object") return false;
-
-  const v = value as Record<string, unknown>;
-
-  return (
-    (v.role === "user" || v.role === "model") &&
-    typeof v.text === "string"
-  );
 }
 
 function sanitizeMessages(input: unknown): ChatMessage[] | null {
@@ -44,74 +25,63 @@ function sanitizeMessages(input: unknown): ChatMessage[] | null {
   const cleaned: ChatMessage[] = [];
 
   for (const item of input) {
-    if (!isChatMessage(item)) return null;
+    if (
+      !item ||
+      typeof item !== "object" ||
+      !("role" in item) ||
+      !("text" in item)
+    ) {
+      return null;
+    }
 
-    const text = item.text.trim().slice(0, MAX_MESSAGE_LENGTH);
+    const msg = item as ChatMessage;
 
-    if (!text) return null;
+    if (
+      (msg.role !== "user" && msg.role !== "model") ||
+      typeof msg.text !== "string"
+    ) {
+      return null;
+    }
 
     cleaned.push({
-      role: item.role,
-      text,
+      role: msg.role,
+      text: msg.text.trim().slice(0, MAX_MESSAGE_LENGTH),
     });
   }
 
   return cleaned;
 }
 
-export default async function handler(req: Request): Promise<Response> {
+export default async function handler(
+  req: VercelRequest,
+  res: VercelResponse
+) {
+  console.log("=== PriSu AI Request Started ===");
+
+  res.setHeader("Cache-Control", "no-store");
+
   if (req.method !== "POST") {
-    return Response.json(
-      { error: "Method not allowed." },
-      {
-        status: 405,
-        headers: {
-          Allow: "POST",
-        },
-      }
-    );
+    return res.status(405).json({
+      error: "Method Not Allowed",
+    });
   }
 
   const apiKey = process.env.GOOGLE_AI_API_KEY;
 
+  console.log("API Key Exists:", !!apiKey);
+
   if (!apiKey) {
-    console.error("Missing GOOGLE_AI_API_KEY");
-    return Response.json(
-      {
-        error: FRIENDLY_FALLBACK,
-      },
-      {
-        status: 500,
-      }
-    );
+    return res.status(500).json({
+      error: "GOOGLE_AI_API_KEY is missing.",
+    });
   }
 
-  let body: { messages?: unknown };
-
-  try {
-    body = await req.json();
-  } catch {
-    return Response.json(
-      {
-        error: "Invalid JSON.",
-      },
-      {
-        status: 400,
-      }
-    );
-  }
-
-  const messages = sanitizeMessages(body.messages);
+  const messages = sanitizeMessages(req.body?.messages);
 
   if (!messages) {
-    return Response.json(
-      {
-        error: "Invalid request.",
-      },
-      {
-        status: 400,
-      }
-    );
+    return res.status(400).json({
+      error: "Invalid request body.",
+    });
   }
 
   const controller = new AbortController();
@@ -121,13 +91,15 @@ export default async function handler(req: Request): Promise<Response> {
   }, REQUEST_TIMEOUT_MS);
 
   try {
-    const geminiResponse = await fetch(GEMINI_URL, {
+    console.log("Calling Gemini...");
+
+    const response = await fetch(GEMINI_URL, {
       method: "POST",
+      signal: controller.signal,
       headers: {
         "Content-Type": "application/json",
         "x-goog-api-key": apiKey,
       },
-      signal: controller.signal,
       body: JSON.stringify({
         system_instruction: {
           parts: [
@@ -153,44 +125,38 @@ export default async function handler(req: Request): Promise<Response> {
 
     clearTimeout(timeout);
 
-    if (!geminiResponse.ok) {
-      const errorText = await geminiResponse.text();
+    console.log("Gemini Status:", response.status);
 
-      console.error(errorText);
+    if (!response.ok) {
+      const text = await response.text();
 
-      return Response.json(
-        {
-          error: FRIENDLY_FALLBACK,
-        },
-        {
-          status: geminiResponse.status,
-        }
-      );
+      console.error(text);
+
+      return res.status(response.status).json({
+        error: FRIENDLY_FALLBACK,
+      });
     }
 
-    const data = (await geminiResponse.json()) as GeminiResponse;
+    const data = await response.json();
 
-    const text =
-      data.candidates?.[0]?.content?.parts
-        ?.map((p) => p.text ?? "")
+    const reply =
+      data?.candidates?.[0]?.content?.parts
+        ?.map((p: any) => p.text ?? "")
         .join("")
-        .trim() ?? "";
+        .trim() || FRIENDLY_FALLBACK;
 
-    return Response.json({
-      reply: text || FRIENDLY_FALLBACK,
+    console.log("Reply Generated");
+
+    return res.status(200).json({
+      reply,
     });
   } catch (err) {
     clearTimeout(timeout);
 
-    console.error(err);
+    console.error("Gemini Error:", err);
 
-    return Response.json(
-      {
-        error: FRIENDLY_FALLBACK,
-      },
-      {
-        status: 500,
-      }
-    );
+    return res.status(500).json({
+      error: FRIENDLY_FALLBACK,
+    });
   }
 }

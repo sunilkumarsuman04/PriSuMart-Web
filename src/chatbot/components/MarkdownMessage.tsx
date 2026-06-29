@@ -51,7 +51,7 @@ function renderInline(text: string): ReactNode[] {
       tokens.push(
         <code
           key={nextKey()}
-          className="px-1.5 py-0.5 rounded-md bg-ink-900/8 dark:bg-cream-50/10 font-mono text-[0.85em]"
+          className="px-1.5 py-0.5 rounded-md bg-ink-900/10 dark:bg-cream-50/10 font-mono text-[0.85em]"
         >
           {code}
         </code>
