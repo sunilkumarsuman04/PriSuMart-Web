@@ -9,42 +9,42 @@
  * /api/chat.ts (server-side only). It is NOT shipped to the browser.
  */
 
+import { APP_CONFIG } from '../config/app.config.js';
+
 export const KNOWLEDGE_BASE = `
 # About PriSuMart
-PriSuMart is a grocery delivery platform that will deliver fresh fruits, vegetables, dairy,
+PriSuMart is a grocery delivery platform that delivers fresh fruits, vegetables, dairy,
 snacks, beverages, household essentials, medicine, and beauty items to customers' doorsteps.
-Tagline: "Fresh Groceries Delivered Fast". Target delivery window: 10–20 minutes from nearby
+Tagline: "Fresh Groceries Delivered Fast". Delivery window: 10–20 minutes from nearby
 local "dark stores" in the customer's neighbourhood, with most orders also described as
 arriving in 30–40 minutes depending on the section of the site.
 
-PriSuMart is currently a PRE-LAUNCH / COMING SOON product. The website you are answering
-questions on is a marketing and waitlist website. There is no live app yet, no live order
-placement, no live order tracking, and no existing order history for any customer. The
-Play Store and App Store links are marked "Coming Soon" and are not yet live.
-People can join the email waitlist on the website to be notified at launch.
-
-Always be honest that PriSuMart has not fully launched yet if asked about placing an order,
-tracking an order, or downloading the app right now. Do not imply there is a working app or
-that any order can currently be placed.
+PriSuMart is LIVE. The customer app is available now on Google Play (Android):
+${APP_CONFIG.playStoreUrl}
+Customers can download the app, browse products, place orders and track deliveries in the app.
+PriSuMart is starting in Jhajha, Bihar and growing city by city across India, so service
+availability depends on the customer's delivery area — if unsure, suggest checking in the app
+or contacting support. The website itself is a marketing website: orders are placed in the
+app, not on the website. The chatbot has no access to any customer's account or orders.
 
 # Product Categories
 Vegetables, Fruits, Dairy, Snacks, Beverages, Household essentials, Medicine, Beauty.
 
-# How It Works (planned flow once the app launches)
+# How It Works
 1. Browse Products — explore fresh produce, dairy, snacks and daily essentials organised into categories.
 2. Add To Cart — pick items, adjust quantities, see the basket total update instantly.
 3. Place Order — confirm address, choose a payment method, and place the order in seconds.
 4. Get Fast Delivery — track the order live as it makes its way to the doorstep, typically in 30–40 minutes.
 
-# Planned Features
-- Fast Delivery: most orders are expected to reach the doorstep in 30–40 minutes from nearby dark stores.
+# Features
+- Fast Delivery: most orders reach the doorstep in 30–40 minutes from nearby dark stores.
 - Fresh Products: daily-sourced fruits, vegetables and dairy, quality-checked before leaving the store.
 - Secure Payments: UPI, card, wallet, or cash on delivery — transactions encrypted end to end.
 - Easy Ordering: a simple checkout flow — search, add to cart, done.
 - Live Tracking: track the delivery partner on a live map once they leave the store.
 - 24/7 Support: support for order issues, refunds, or other questions, any time of day.
 
-# Payment Methods (planned)
+# Payment Methods
 - UPI
 - QR code payment
 - Credit/debit card
@@ -102,14 +102,18 @@ platform, to the extent permitted by applicable law.
 
 # Frequently Asked Questions
 Q: Is the PriSuMart app available now?
-A: Not yet — PriSuMart is currently in a "coming soon" pre-launch stage. Visitors can join the
-   email waitlist on the website to be notified the moment the app goes live.
+A: Yes — PriSuMart is live on Google Play for Android. Search "PriSuMart" on the Play Store or
+   use the Download App button on the website: ${APP_CONFIG.playStoreUrl}
+
+Q: Is there an iPhone (iOS) app?
+A: The app is currently available on Google Play for Android. No iOS listing is announced on
+   the website yet.
 
 Q: How fast is delivery?
-A: Once live, PriSuMart aims to deliver most orders within 10–20 minutes (also described as
+A: PriSuMart aims to deliver most orders within 10–20 minutes (also described as
    30–40 minutes for some categories) from a nearby local dark store.
 
-Q: What payment methods will be supported?
+Q: What payment methods are supported?
 A: UPI, QR code payment, credit/debit cards, bank transfer, digital wallets, and Cash on
    Delivery (COD).
 
@@ -129,9 +133,9 @@ A: BTM Layout, Bangalore, India.
 
 /** Friendly, on-topic conversation starters shown in the chatbot UI. */
 export const SUGGESTED_QUESTIONS: string[] = [
-  'Is the PriSuMart app available yet?',
-  'What payment methods will you support?',
-  'How fast will delivery be?',
+  'How do I download the PriSuMart app?',
+  'What payment methods do you support?',
+  'How fast is delivery?',
   'What if my order arrives damaged?',
   'How can I contact support?',
 ];

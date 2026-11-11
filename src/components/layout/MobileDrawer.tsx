@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { HiXMark } from 'react-icons/hi2';
 import { Logo } from '../shared/Logo';
-import { Button } from '../ui/Button';
+import { DownloadButton } from '../shared/DownloadButton';
 import { NAV_LINKS } from '../../data/site';
 
 interface MobileDrawerProps {
@@ -19,14 +20,6 @@ export function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
-
-  const handleLinkClick = (href: string) => {
-    onClose();
-    const el = document.querySelector(href);
-    if (el) {
-      setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
-    }
-  };
 
   return (
     <AnimatePresence>
@@ -64,20 +57,19 @@ export function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
 
             <nav className="flex flex-col gap-1 px-5 py-6 flex-1" aria-label="Mobile">
               {NAV_LINKS.map((link) => (
-                <button
+                <Link
                   key={link.href}
-                  onClick={() => handleLinkClick(link.href)}
-                  className="text-left text-lg font-display font-semibold text-ink-900 dark:text-cream-50 py-3.5 px-3 rounded-xl hover:bg-brand-50 dark:hover:bg-white/5 transition-colors min-h-[44px]"
+                  to={{ pathname: '/', hash: link.href }}
+                  onClick={onClose}
+                  className="text-left text-lg font-display font-semibold text-ink-900 dark:text-cream-50 py-3.5 px-3 rounded-xl hover:bg-brand-50 dark:hover:bg-white/5 active:bg-brand-100 transition-colors min-h-[44px]"
                 >
                   {link.label}
-                </button>
+                </Link>
               ))}
             </nav>
 
             <div className="px-5 py-6 border-t border-ink-900/5 dark:border-white/10">
-              <Button fullWidth size="lg" onClick={() => handleLinkClick('#app-preview')}>
-                Download App
-              </Button>
+              <DownloadButton fullWidth size="lg" />
             </div>
           </motion.div>
         </>

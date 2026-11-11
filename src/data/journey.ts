@@ -10,7 +10,7 @@ export const JOURNEY_PHASES: JourneyPhase[] = [
   {
     id: 'phase-1',
     phase: 'Phase 01',
-    title: 'Launching in Jhajha',
+    title: 'Starting in Jhajha',
     description: 'Our first city — proving the model, store by store, order by order.',
     status: 'active',
   },
@@ -18,7 +18,7 @@ export const JOURNEY_PHASES: JourneyPhase[] = [
     id: 'phase-2',
     phase: 'Phase 02',
     title: 'Expanding across Bihar',
-    description: 'Scaling the network to new cities, faster each time we launch.',
+    description: 'Scaling the network to new cities, faster with every new city.',
     status: 'next',
   },
   {

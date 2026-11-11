@@ -1,54 +1,31 @@
-import { FaGooglePlay, FaApple } from 'react-icons/fa';
-import { APP_LINKS } from '../../data/site';
+import { FaGooglePlay } from 'react-icons/fa';
+import { APP_CONFIG } from '../../config/app.config';
 
 interface StoreBadgeProps {
-  store: 'playStore' | 'appStore';
   variant?: 'light' | 'dark';
+  className?: string;
 }
 
-export function StoreBadge({ store, variant = 'dark' }: StoreBadgeProps) {
-  const config = APP_LINKS[store];
-  const isDisabled = config.comingSoon || !config.url;
-  const Icon = store === 'playStore' ? FaGooglePlay : FaApple;
-  const label = store === 'playStore' ? 'Google Play' : 'App Store';
-  const sublabel = isDisabled ? 'Coming soon' : 'GET IT ON';
-
-  const baseClasses = `flex items-center gap-3 px-5 py-3 rounded-xl min-h-[52px] transition-all duration-200 ${
-    variant === 'light' ? 'bg-white text-ink-900 border border-ink-900/10' : 'bg-ink-900 text-white border border-white/10'
-  }`;
-
-  const content = (
-    <>
-      <Icon className="text-2xl shrink-0" />
-      <div className="flex flex-col items-start leading-tight">
-        <span className="text-[10px] font-medium opacity-60 uppercase tracking-wide">{sublabel}</span>
-        <span className="text-base font-bold font-display">{label}</span>
-      </div>
-    </>
-  );
-
-  if (isDisabled) {
-    return (
-      <button
-        disabled
-        aria-disabled="true"
-        aria-label={`${label} — coming soon`}
-        className={`${baseClasses} opacity-60 cursor-not-allowed`}
-      >
-        {content}
-      </button>
-    );
-  }
+/** "Get it on Google Play" badge — live link to the Play Store listing. */
+export function StoreBadge({ variant = 'dark', className = '' }: StoreBadgeProps) {
+  const tone =
+    variant === 'light'
+      ? 'bg-white text-ink-900 border border-ink-900/10'
+      : 'bg-ink-900 text-white border border-white/10';
 
   return (
     <a
-      href={config.url}
+      href={APP_CONFIG.playStoreUrl}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={`Download PriSuMart on ${label}`}
-      className={`${baseClasses} hover:-translate-y-0.5 hover:shadow-lift`}
+      aria-label={`Download ${APP_CONFIG.brand.name} on ${APP_CONFIG.brand.storeName} (opens in a new tab)`}
+      className={`group inline-flex items-center gap-3 px-5 py-3 rounded-xl min-h-[52px] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lift active:scale-[0.97] ${tone} ${className}`}
     >
-      {content}
+      <FaGooglePlay aria-hidden="true" className="text-2xl shrink-0 transition-transform duration-200 group-hover:scale-110" />
+      <span className="flex flex-col items-start leading-tight">
+        <span className="text-[10px] font-medium opacity-70">Get it on</span>
+        <span className="text-base font-bold font-display">{APP_CONFIG.brand.storeName}</span>
+      </span>
     </a>
   );
 }

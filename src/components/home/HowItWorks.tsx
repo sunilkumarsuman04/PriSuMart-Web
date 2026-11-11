@@ -1,5 +1,6 @@
 import { SectionHeading, Container } from '../ui/Primitives';
 import { Reveal } from '../shared/Reveal';
+import { DownloadButton } from '../shared/DownloadButton';
 import { STEPS } from '../../data/steps';
 
 export function HowItWorks() {
@@ -9,7 +10,7 @@ export function HowItWorks() {
         <SectionHeading
           eyebrow="The Process"
           title="From browsing to your doorstep, in four steps"
-          description="A real, typed sequence — each step happens in order, and the last one is the one that matters most: speed."
+          description="Four simple steps, and the last one is the one that matters most: speed."
         />
 
         <div className="relative">
@@ -49,6 +50,12 @@ export function HowItWorks() {
             })}
           </div>
         </div>
+
+        <Reveal delay={0.1}>
+          <div className="mt-12 flex justify-center">
+            <DownloadButton size="lg" label="Start your first order" />
+          </div>
+        </Reveal>
       </Container>
     </section>
   );

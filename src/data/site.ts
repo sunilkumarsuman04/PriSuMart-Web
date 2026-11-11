@@ -1,6 +1,8 @@
+import { APP_CONFIG } from '../config/app.config';
+
 export const SITE = {
-  name: 'PriSuMart',
-  tagline: 'Fresh Groceries Delivered Fast',
+  name: APP_CONFIG.brand.name,
+  tagline: APP_CONFIG.brand.tagline,
   legalName: 'PriSuMart',
   domain: 'https://www.prisumart.com',
   description:
@@ -40,15 +42,10 @@ export const FOOTER_LINKS = {
   ],
 };
 
-// Replace these with real store URLs when ready — components read this flag
-// to decide whether buttons are interactive or show "Coming Soon".
+// Store links live in src/config/app.config.ts — edit them there.
 export const APP_LINKS = {
   playStore: {
-    url: '', // e.g. 'https://play.google.com/store/apps/details?id=com.prisumart.app'
-    comingSoon: true,
-  },
-  appStore: {
-    url: '', // e.g. 'https://apps.apple.com/app/prisumart/id0000000000'
-    comingSoon: true,
+    url: APP_CONFIG.playStoreUrl,
+    label: APP_CONFIG.brand.storeName,
   },
 };

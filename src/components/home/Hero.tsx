@@ -1,10 +1,12 @@
 import { motion } from 'framer-motion';
-import { HiOutlineArrowRight, HiOutlineClock, HiOutlineCheckBadge } from 'react-icons/hi2';
+import { HiOutlineClock, HiOutlineMapPin } from 'react-icons/hi2';
 import { Container } from '../ui/Primitives';
 import { Button } from '../ui/Button';
+import { DownloadButton } from '../shared/DownloadButton';
 import { DeliveryRibbon } from '../shared/DeliveryRibbon';
 import { GroceryIllustration } from './GroceryIllustration';
 import { SITE } from '../../data/site';
+import { APP_CONFIG } from '../../config/app.config';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -34,9 +36,11 @@ export function Hero() {
               variants={fadeUp}
               className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/70 dark:bg-white/10 border border-brand-200/60 dark:border-white/15 text-brand-700 dark:text-brand-300 text-sm font-semibold shadow-soft"
             >
-              <HiOutlineCheckBadge className="text-base" />
-              📍 Launching First in Jhajha, Bihar
-Growing City by City Across India
+              <span className="relative flex h-2.5 w-2.5 shrink-0">
+                <span className="absolute inline-flex h-full w-full rounded-full bg-brand-400 motion-safe:animate-ping opacity-75" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-brand-500" />
+              </span>
+              {APP_CONFIG.live.badge}
             </motion.span>
 
             <motion.h1
@@ -58,13 +62,7 @@ Growing City by City Across India
             </motion.p>
 
             <motion.div custom={3} variants={fadeUp} className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-              <Button
-                size="lg"
-                icon={<HiOutlineArrowRight />}
-                onClick={() => document.querySelector('#app-preview')?.scrollIntoView({ behavior: 'smooth' })}
-              >
-                Download App
-              </Button>
+              <DownloadButton size="lg" pulse />
               <Button
                 size="lg"
                 variant="ghost"
@@ -80,6 +78,10 @@ Growing City by City Across India
               <DeliveryRibbon />
               <p className="text-xs font-medium text-ink-800/55 dark:text-cream-50/50 mt-2 text-center lg:text-left">
                 Store to doorstep, tracked live, every order
+              </p>
+              <p className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-ink-800/60 dark:text-cream-50/55">
+                <HiOutlineMapPin className="text-sm text-sun-600 dark:text-sun-400 shrink-0" aria-hidden="true" />
+                Starting in Jhajha, Bihar — growing city by city across India
               </p>
             </motion.div>
           </motion.div>

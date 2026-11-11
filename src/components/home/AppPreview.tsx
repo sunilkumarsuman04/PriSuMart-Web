@@ -1,11 +1,20 @@
 import { motion } from 'framer-motion';
 import { Container } from '../ui/Primitives';
 import { Reveal } from '../shared/Reveal';
+import { HiOutlineBolt, HiOutlineMapPin, HiOutlineShieldCheck } from 'react-icons/hi2';
+import { DownloadButton } from '../shared/DownloadButton';
 import { StoreBadge } from '../shared/StoreBadge';
+import { APP_CONFIG } from '../../config/app.config';
 import splashWebp from '../../assets/images/app-screenshot-splash.webp';
 import splashPng from '../../assets/images/app-screenshot-splash.png';
 import homeWebp from '../../assets/images/app-screenshot-home.webp';
 import homePng from '../../assets/images/app-screenshot-home.png';
+
+const HIGHLIGHTS = [
+  { icon: HiOutlineBolt, label: '30–40 min delivery' },
+  { icon: HiOutlineMapPin, label: 'Live order tracking' },
+  { icon: HiOutlineShieldCheck, label: 'UPI, cards & COD' },
+];
 
 function PhoneFrame({
   webp,
@@ -54,7 +63,11 @@ export function AppPreview() {
       <Container>
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Phones */}
-          <div className="flex justify-center items-center gap-2 xs:gap-3 sm:gap-6 order-2 lg:order-1">
+          <div className="relative flex justify-center items-center gap-2 xs:gap-3 sm:gap-6 order-2 lg:order-1">
+            <div
+              aria-hidden="true"
+              className="absolute inset-x-6 sm:inset-x-12 inset-y-4 rounded-[2.5rem] bg-grad-brand opacity-[0.12] dark:opacity-[0.18] blur-2xl"
+            />
             <PhoneFrame
               webp={splashWebp}
               png={splashPng}
@@ -74,25 +87,42 @@ export function AppPreview() {
           {/* Copy */}
           <div className="order-1 lg:order-2 text-center lg:text-left flex flex-col items-center lg:items-start">
             <Reveal>
-              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sun-100 dark:bg-sun-900/30 text-sun-700 dark:text-sun-400 text-sm font-semibold mb-5">
-                📱 Launching soon
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-50 dark:bg-brand-900/30 border border-brand-200/70 dark:border-brand-700/40 text-brand-700 dark:text-brand-300 text-sm font-semibold mb-5">
+                <span className="relative flex h-2.5 w-2.5 shrink-0">
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-brand-400 motion-safe:animate-ping opacity-75" />
+                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-brand-500" />
+                </span>
+                {APP_CONFIG.live.subline}
               </span>
             </Reveal>
             <Reveal delay={0.08}>
-              <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-bold leading-tight text-ink-900 dark:text-cream-50 mb-4 max-w-md">
-                The PriSuMart app is almost ready
+              <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-bold leading-tight text-ink-900 dark:text-cream-50 mb-4 max-w-md text-balance">
+                {APP_CONFIG.live.headline}
               </h2>
             </Reveal>
             <Reveal delay={0.16}>
-              <p className="text-lg text-ink-800/70 dark:text-cream-50/65 mb-8 max-w-md leading-relaxed">
-                Browse categories, track flash deals, and get fresh groceries delivered in{' '}
-                {' '}30–40 minutes — all from one app. We're polishing the final details before launch.
+              <p className="text-lg text-ink-800/70 dark:text-cream-50/65 mb-6 max-w-md leading-relaxed">
+                Browse categories, grab flash deals, and get fresh groceries delivered in 30–40 minutes — all from one
+                app. Your first basket is just a few taps away.
               </p>
             </Reveal>
+            <Reveal delay={0.2}>
+              <ul className="flex flex-wrap justify-center lg:justify-start gap-2 mb-8 max-w-md">
+                {HIGHLIGHTS.map(({ icon: Icon, label }) => (
+                  <li
+                    key={label}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-white dark:bg-ink-900 border border-ink-900/5 dark:border-white/10 px-3 py-1.5 text-sm font-medium text-ink-900 dark:text-cream-50 shadow-soft"
+                  >
+                    <Icon className="text-brand-600 dark:text-brand-300" aria-hidden="true" />
+                    {label}
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
             <Reveal delay={0.24}>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <StoreBadge store="playStore" />
-                <StoreBadge store="appStore" />
+              <div className="flex flex-col sm:flex-row items-center gap-3">
+                <DownloadButton size="lg" label={APP_CONFIG.live.cta} pulse />
+                <StoreBadge className="hidden sm:inline-flex" />
               </div>
             </Reveal>
           </div>

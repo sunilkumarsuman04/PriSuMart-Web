@@ -80,6 +80,7 @@ export default {
         'pulse-ring': 'pulseRing 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         marquee: 'marquee 18s linear infinite',
         wiggle: 'wiggle 0.5s ease-in-out',
+        'cta-pulse': 'ctaPulse 2.4s ease-out infinite',
       },
       keyframes: {
         fadeUp: {
@@ -102,6 +103,11 @@ export default {
         marquee: {
           '0%': { transform: 'translateX(0%)' },
           '100%': { transform: 'translateX(-50%)' },
+        },
+        ctaPulse: {
+          '0%': { boxShadow: '0 0 0 0 rgba(245, 166, 35, 0.55)' },
+          '70%': { boxShadow: '0 0 0 12px rgba(245, 166, 35, 0)' },
+          '100%': { boxShadow: '0 0 0 0 rgba(245, 166, 35, 0)' },
         },
         wiggle: {
           '0%, 100%': { transform: 'rotate(0deg)' },

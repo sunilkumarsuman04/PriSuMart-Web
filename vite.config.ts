@@ -1,8 +1,18 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { APP_CONFIG } from './src/config/app.config';
+
+// Fills __PLAY_STORE_URL__ in index.html (structured data, <noscript>) from the
+// central config so the store URL is never duplicated by hand.
+const htmlConfigPlugin = () => ({
+  name: 'prisumart-html-config',
+  transformIndexHtml(html: string) {
+    return html.replaceAll('__PLAY_STORE_URL__', APP_CONFIG.playStoreUrl);
+  },
+});
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), htmlConfigPlugin()],
   server: {
     // Forwards /api/* requests to a separately running `vercel dev` instance
     // (see README → "Running Locally") so the Gemini-backed chatbot endpoint

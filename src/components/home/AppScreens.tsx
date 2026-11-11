@@ -44,7 +44,7 @@ export function AppScreenHome() {
       {/* Hero banner */}
       <div className="rounded-xl glass-strong p-3 flex flex-col gap-1">
         <span className="text-[10px] text-sun-300 font-semibold">100% Fresh</span>
-        <span className="text-[12px] text-cream-50 font-bold leading-snug">Delivered in 30–40 min</span>
+        <span className="text-[12px] text-cream-50 font-bold leading-snug">Delivered in 20–30 min</span>
         <div className="h-1.5 w-12 rounded-full bg-grad-brand mt-1" />
       </div>
 

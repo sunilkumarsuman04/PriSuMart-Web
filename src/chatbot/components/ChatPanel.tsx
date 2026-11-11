@@ -161,7 +161,7 @@ export function ChatPanel({ onClose, panelId }: ChatPanelProps) {
 
   const panelClass = isMobile
     ? "fixed left-0 right-0 z-[100] w-full flex flex-col rounded-none overflow-hidden bg-white dark:bg-ink-900 border-none shadow-none transition-colors duration-300"
-    : "fixed bottom-[calc(6rem+env(safe-area-inset-bottom))] right-3 left-3 sm:left-auto sm:right-6 z-[90] w-auto sm:w-[380px] lg:w-[400px] h-[min(640px,75dvh)] max-h-[calc(100dvh-7rem-env(safe-area-inset-bottom))] flex flex-col rounded-3xl overflow-hidden bg-white dark:bg-ink-900 shadow-2xl border border-ink-900/5 dark:border-white/10 transition-colors duration-300";
+    : "fixed bottom-[calc(6rem+env(safe-area-inset-bottom)+var(--banner-h,0px))] right-3 left-3 sm:left-auto sm:right-6 z-[90] w-auto sm:w-[380px] lg:w-[400px] h-[min(640px,75dvh)] max-h-[calc(100dvh-7rem-env(safe-area-inset-bottom)-var(--banner-h,0px))] flex flex-col rounded-3xl overflow-hidden bg-white dark:bg-ink-900 shadow-2xl border border-ink-900/5 dark:border-white/10 transition-colors duration-300";
 
   return (
     <motion.div

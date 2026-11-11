@@ -71,7 +71,7 @@ export function ContactForm() {
       className="flex flex-col gap-5"
       aria-label="Contact form"
     >
-      <div className="grid sm:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div className="flex flex-col gap-1.5">
           <label
             htmlFor="name"
@@ -86,7 +86,7 @@ export function ContactForm() {
             required
             autoComplete="name"
             placeholder="Riya Sharma"
-            className="px-4 py-3 rounded-xl border border-ink-900/10 dark:border-white/15 bg-white dark:bg-ink-900 text-ink-900 dark:text-cream-50 placeholder:text-ink-800/35 dark:placeholder:text-cream-50/30 focus:border-brand-500 outline-none transition-colors min-h-[44px]"
+            className="w-full min-w-0 px-4 py-3 rounded-xl border border-ink-900/10 dark:border-white/15 bg-white dark:bg-ink-900 text-ink-900 dark:text-cream-50 placeholder:text-ink-800/35 dark:placeholder:text-cream-50/30 focus:border-brand-500 outline-none transition-colors min-h-[44px]"
           />
         </div>
 
@@ -104,7 +104,7 @@ export function ContactForm() {
             required
             autoComplete="email"
             placeholder="riya@example.com"
-            className="px-4 py-3 rounded-xl border border-ink-900/10 dark:border-white/15 bg-white dark:bg-ink-900 text-ink-900 dark:text-cream-50 placeholder:text-ink-800/35 dark:placeholder:text-cream-50/30 focus:border-brand-500 outline-none transition-colors min-h-[44px]"
+            className="w-full min-w-0 px-4 py-3 rounded-xl border border-ink-900/10 dark:border-white/15 bg-white dark:bg-ink-900 text-ink-900 dark:text-cream-50 placeholder:text-ink-800/35 dark:placeholder:text-cream-50/30 focus:border-brand-500 outline-none transition-colors min-h-[44px]"
           />
         </div>
       </div>
@@ -122,7 +122,7 @@ export function ContactForm() {
           type="text"
           required
           placeholder="What's this about?"
-          className="px-4 py-3 rounded-xl border border-ink-900/10 dark:border-white/15 bg-white dark:bg-ink-900 text-ink-900 dark:text-cream-50 placeholder:text-ink-800/35 dark:placeholder:text-cream-50/30 focus:border-brand-500 outline-none transition-colors min-h-[44px]"
+          className="w-full min-w-0 px-4 py-3 rounded-xl border border-ink-900/10 dark:border-white/15 bg-white dark:bg-ink-900 text-ink-900 dark:text-cream-50 placeholder:text-ink-800/35 dark:placeholder:text-cream-50/30 focus:border-brand-500 outline-none transition-colors min-h-[44px]"
         />
       </div>
 
@@ -139,7 +139,7 @@ export function ContactForm() {
           required
           rows={5}
           placeholder="Tell us how we can help..."
-          className="px-4 py-3 rounded-xl border border-ink-900/10 dark:border-white/15 bg-white dark:bg-ink-900 text-ink-900 dark:text-cream-50 placeholder:text-ink-800/35 dark:placeholder:text-cream-50/30 focus:border-brand-500 outline-none transition-colors resize-none"
+          className="w-full min-w-0 px-4 py-3 rounded-xl border border-ink-900/10 dark:border-white/15 bg-white dark:bg-ink-900 text-ink-900 dark:text-cream-50 placeholder:text-ink-800/35 dark:placeholder:text-cream-50/30 focus:border-brand-500 outline-none transition-colors resize-none"
         />
       </div>
 

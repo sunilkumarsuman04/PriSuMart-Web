@@ -8,9 +8,9 @@
     <title>PriSuMart — Fresh Groceries Delivered Fast</title>
     <meta
       name="description"
-      content="PriSuMart delivers fresh fruits, vegetables, dairy, snacks and household essentials to your doorstep in 30–40 minutes. Download the app — coming soon to Play Store and App Store."
+      content="PriSuMart is now live! Order fresh fruits, vegetables, dairy, snacks and household essentials with fast doorstep delivery. Download the app today on Google Play."
     />
-    <meta name="keywords" content="PriSuMart, grocery delivery, online grocery, fast delivery, fresh groceries, instant delivery app, quick commerce, grocery app India" />
+    <meta name="keywords" content="PriSuMart, PriSuMart app, Google Play, grocery delivery, online grocery, fast delivery, fresh groceries, instant delivery app, quick commerce, grocery app India" />
     <meta name="author" content="PriSuMart" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://www.prisumart.com/" />
@@ -26,9 +26,12 @@
     <meta property="og:title" content="PriSuMart — Fresh Groceries Delivered Fast" />
     <meta
       property="og:description"
-      content="Fresh fruits, vegetables, dairy & daily essentials delivered to your doorstep in 30–40 minutes. PriSuMart — Fresh Items, Happy Homes."
+      content="PriSuMart is now live on Google Play. Fresh fruits, vegetables, dairy & daily essentials delivered fast — Fresh Items, Happy Homes."
     />
     <meta property="og:image" content="https://www.prisumart.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="PriSuMart — Fresh Groceries Delivered Fast. Now on Google Play." />
     <meta property="og:site_name" content="PriSuMart" />
     <meta property="og:locale" content="en_IN" />
 
@@ -37,9 +40,10 @@
     <meta name="twitter:title" content="PriSuMart — Fresh Groceries Delivered Fast" />
     <meta
       name="twitter:description"
-      content="Fresh groceries delivered to your doorstep in 30–40 minutes. Download the PriSuMart app — coming soon."
+      content="PriSuMart is now live! Fresh groceries delivered fast — download the app today on Google Play."
     />
     <meta name="twitter:image" content="https://www.prisumart.com/og-image.png" />
+    <meta name="twitter:image:alt" content="PriSuMart — Fresh Groceries Delivered Fast. Now on Google Play." />
 
     <!-- Fonts: Sora (display) + Inter (body) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -56,29 +60,39 @@
         "@type": "Organization",
         "name": "PriSuMart",
         "url": "https://www.prisumart.com",
-        "logo": "https://www.prisumart.com/logo.png",
+        "logo": "https://www.prisumart.com/apple-touch-icon.png",
         "description": "PriSuMart is a grocery delivery platform offering fresh fruits, vegetables, dairy, snacks and household essentials with fast doorstep delivery.",
         "sameAs": []
       }
     </script>
 
-    <!-- Structured Data: MobileApplication (placeholder, update once live) -->
+    <!-- Structured Data: MobileApplication (Play Store URL is filled from src/config/app.config.ts at build time) -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "MobileApplication",
         "name": "PriSuMart",
-        "operatingSystem": "ANDROID, IOS",
+        "operatingSystem": "ANDROID",
         "applicationCategory": "ShoppingApplication",
+        "url": "__PLAY_STORE_URL__",
+        "downloadUrl": "__PLAY_STORE_URL__",
+        "installUrl": "__PLAY_STORE_URL__",
         "offers": {
           "@type": "Offer",
-          "price": "0"
+          "price": "0",
+          "priceCurrency": "INR"
         }
       }
     </script>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <p style="padding:2rem;font-family:system-ui,sans-serif;text-align:center">
+        PriSuMart is now live! Enable JavaScript to view this site, or
+        <a href="__PLAY_STORE_URL__">download the app on Google Play</a>.
+      </p>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

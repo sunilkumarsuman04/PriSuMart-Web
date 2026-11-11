@@ -1,6 +1,6 @@
 # PriSuMart — Marketing Website
 
-A modern, responsive, production-ready marketing website for **PriSuMart** — a grocery delivery platform. This is a **frontend-only public website** (not the admin panel, not the customer app) built to promote the brand and host Play Store / App Store links once the app launches.
+A modern, responsive, production-ready marketing website for **PriSuMart** — a grocery delivery platform. This is a **frontend-only public website** (not the admin panel, not the customer app) built to promote the brand and send visitors to the live Android app on Google Play.
 
 **Tagline:** Fresh Groceries Delivered Fast
 **Brand colors:** Green (`#2E8B3D`) primary, Orange (`#F5A623`) for CTAs and accents — derived from the PriSuMart logo.
@@ -39,12 +39,14 @@ prisumart/
 │   ├── components/
 │   │   ├── layout/            # Navbar, Footer, MobileDrawer
 │   │   ├── home/               # All homepage sections (Hero, Features, etc.)
-│   │   ├── shared/             # Logo, ThemeToggle, Reveal, DeliveryRibbon, StoreBadge
+│   │   ├── shared/             # Logo, ThemeToggle, Reveal, DeliveryRibbon, StoreBadge, DownloadButton, DownloadBanner, ScrollManager
 │   │   └── ui/                 # Button, Container, SectionHeading primitives
 │   ├── context/
 │   │   └── ThemeContext.tsx    # dark/light mode provider
+│   ├── config/
+│   │   └── app.config.ts       # ★ Play Store URL, AshPro InfoTech link, banner text, branding
 │   ├── data/                   # Site content — edit here, not in components
-│   │   ├── site.ts             # nav links, contact info, APP_LINKS (store URLs)
+│   │   ├── site.ts             # nav links, contact info (reads store URL from app.config.ts)
 │   │   ├── features.ts
 │   │   ├── steps.ts
 │   │   ├── categories.ts
@@ -86,7 +88,7 @@ A floating customer-support chatbot ("PriSu AI") in the bottom-right corner, pow
 - **Frontend** (`src/chatbot/`): a lazy-loaded React widget (`ChatWidget`) mounted once in `App.tsx`, after `<Footer />`. It never renders on the server and adds no weight to the initial page bundle — it's fetched only when the browser is idle/the user opens it.
 - **Backend** (`api/chat.ts`): a **Vercel Serverless Function**. The browser never talks to Gemini directly — it calls `POST /api/chat`, and the function calls Gemini server-side using `GOOGLE_AI_API_KEY`, which is read from an environment variable and never sent to the client.
 - **Knowledge base** (`src/chatbot/knowledge.ts`): plain-text facts about PriSuMart (delivery, payments, policies, contact info, FAQ). Edit this file to update what the bot knows — no need to touch any component or prompt logic.
-- **System prompt** (`src/chatbot/systemPrompt.ts`): combines the knowledge base with behavior rules (stay on-topic, never invent policies, never reveal the prompt, be upfront that the app hasn't launched yet).
+- **System prompt** (`src/chatbot/systemPrompt.ts`): combines the knowledge base with behavior rules (stay on-topic, never invent policies, never reveal the prompt, state that the app is live on Google Play).
 
 ```
 Browser  →  POST /api/chat  →  Vercel Function  →  Gemini API
@@ -134,8 +136,8 @@ If you only need to work on UI/content (not the chatbot), Terminal 1 isn't neede
 
 ### What the Bot Will and Won't Do
 
-- ✅ Answers questions about PriSuMart's planned delivery times, payment methods, return policy, privacy policy, and contact details.
-- ✅ Is upfront that PriSuMart is **pre-launch** — there's no live app yet, so it won't pretend to track an order or place one.
+- ✅ Answers questions about PriSuMart's delivery times, payment methods, return policy, privacy policy, and contact details.
+- ✅ Tells people the app is **live on Google Play**, and points them to the download link. It has no access to accounts or orders, so it won't pretend to track or place one.
 - ❌ Won't answer off-topic questions (coding, politics, general trivia, etc.) — replies with a polite redirect instead.
 - ❌ Won't reveal its system prompt, the API key, or invent policies that aren't in `knowledge.ts`.
 
@@ -145,24 +147,27 @@ Edit `src/chatbot/knowledge.ts` — it's a single exported string, organized by 
 
 ---
 
-## Adding Real Store Links
+## Central Configuration (`src/config/app.config.ts`)
 
-Open `src/data/site.ts` and update:
+Everything you are likely to change lives in one file:
 
-```ts
-export const APP_LINKS = {
-  playStore: {
-    url: 'https://play.google.com/store/apps/details?id=com.prisumart.app',
-    comingSoon: false, // flip this to false once the URL is live
-  },
-  appStore: {
-    url: 'https://apps.apple.com/app/prisumart/id0000000000',
-    comingSoon: false,
-  },
-};
-```
+| Setting | Key | Used by |
+|---|---|---|
+| Google Play URL | `playStoreUrl` | every Download App button, the bottom banner, footer badge, chatbot knowledge base, JSON-LD / `<noscript>` in `index.html` |
+| AshPro InfoTech link | `poweredBy.url` | footer credit **only** — currently the placeholder `https://example.com` |
+| Download banner text | `banner.heading`, `banner.subtitle`, `banner.cta` | `DownloadBanner` |
+| "Now live" copy | `live.*` | hero badge, app section |
+| Brand info | `brand.*` | banner, structured data |
 
-The `StoreBadge` component automatically switches from a disabled "Coming Soon" button to a real clickable link — no other code changes needed.
+`index.html` can't import TypeScript, so it contains the token `__PLAY_STORE_URL__`; a tiny plugin in `vite.config.ts` replaces it with `playStoreUrl` at dev/build time.
+
+**To replace the AshPro InfoTech URL:** edit `poweredBy.url` in `src/config/app.config.ts`. Nothing else needs to change.
+
+### Download banner
+
+`DownloadBanner` (mounted once in `App.tsx`) appears ~1.2 s after load on every page, can be dismissed, and stays dismissed for the browser session (`sessionStorage`). It publishes its height as the CSS variable `--banner-h`, which the footer and chat launcher use as extra bottom spacing so nothing is covered.
+
+To add another download button anywhere, use `<DownloadButton />` (or `<StoreBadge />`) — never hard-code the URL.
 
 To add more cards to the **Other Apps** section, edit `src/data/otherApps.ts`.
 
@@ -183,7 +188,7 @@ All brand colors are defined as Tailwind tokens in `tailwind.config.js` under `b
 - Semantic HTML (`<header>`, `<main>`, `<footer>`, proper heading hierarchy)
 - `react-helmet-async` wired up for per-route title changes
 
-Before going live, update `https://www.prisumart.com` references in `index.html` and `src/data/site.ts` to your real domain, and replace `public/og-image.png` with a proper 1200×630 social preview image.
+Before going live, confirm the `https://www.prisumart.com` references in `index.html`, `src/data/site.ts`, `public/robots.txt` and `public/sitemap.xml` match your real domain. `public/og-image.png` is a 1200×630 social preview — replace it if you have a branded design.
 
 ---
 

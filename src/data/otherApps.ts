@@ -12,9 +12,9 @@ export interface OtherApp {
 export const OTHER_APPS: OtherApp[] = [
   {
     id: 'placeholder-1',
-    name: 'Coming Soon',
-    description: 'Another product from our team is on the way. Check back soon for details.',
-    iconLetter: '?',
+    name: 'More from PriSuMart',
+    description: 'Explore other products from our team as they become available.',
+    iconLetter: 'P',
     url: '#',
     accent: 'brand',
   },

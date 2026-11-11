@@ -1,9 +1,14 @@
+import { Helmet } from 'react-helmet-async';
 import { Container } from '../components/ui/Primitives';
 import { SITE } from '../data/site';
 
 export function TermsPage() {
   return (
     <main id="main-content" className="pt-28 sm:pt-32 pb-20">
+      <Helmet>
+        <title>Terms &amp; Conditions — PriSuMart</title>
+        <meta name="description" content="The terms that apply when you use the PriSuMart app and website." />
+      </Helmet>
       <Container className="max-w-3xl">
         <h1 className="text-3xl sm:text-4xl font-bold text-ink-900 dark:text-cream-50 mb-3">Terms & Conditions</h1>
         <p className="text-sm text-ink-800/55 dark:text-cream-50/50 mb-10">Last updated: June 2026</p>

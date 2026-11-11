@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { HiOutlineBars3 } from 'react-icons/hi2';
 import { Logo } from '../shared/Logo';
 import { ThemeToggle } from '../shared/ThemeToggle';
-import { Button } from '../ui/Button';
+import { DownloadButton } from '../shared/DownloadButton';
+import { useActiveSection } from '../../hooks/useActiveSection';
 import { Container } from '../ui/Primitives';
 import { MobileDrawer } from './MobileDrawer';
 import { NAV_LINKS } from '../../data/site';
@@ -10,6 +12,13 @@ import { NAV_LINKS } from '../../data/site';
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const { pathname } = useLocation();
+  const isHome = pathname === '/';
+  // 'app-preview' is observed too so Home doesn't stay highlighted while the app section is on screen.
+  const activeId = useActiveSection(
+    [...NAV_LINKS.map((l) => l.href.slice(1)), 'app-preview'],
+    isHome
+  );
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 12);
@@ -26,12 +35,6 @@ export function Navbar() {
     };
   }, [isDrawerOpen]);
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
-
   return (
     <>
       <a href="#main-content" className="skip-link">
@@ -46,20 +49,24 @@ export function Navbar() {
       >
         <Container>
           <nav className="flex items-center justify-between" aria-label="Primary">
-            <a href="#home" onClick={(e) => handleNavClick(e, '#home')} aria-label="PriSuMart home">
+            <Link to={{ pathname: '/', hash: '#home' }} aria-label="PriSuMart home" className="rounded-lg">
               <Logo size="sm" />
-            </a>
+            </Link>
 
             <ul className="hidden lg:flex items-center gap-1">
               {NAV_LINKS.map((link) => (
                 <li key={link.href}>
-                  <a
-                    href={link.href}
-                    onClick={(e) => handleNavClick(e, link.href)}
-                    className="px-4 py-2 rounded-full text-[15px] font-medium text-ink-800 dark:text-cream-50/90 hover:text-brand-700 dark:hover:text-brand-300 hover:bg-brand-50 dark:hover:bg-white/5 transition-colors"
+                  <Link
+                    to={{ pathname: '/', hash: link.href }}
+                    aria-current={isHome && activeId === link.href.slice(1) ? 'location' : undefined}
+                    className={`px-4 py-2 rounded-full text-[15px] font-medium transition-colors hover:text-brand-700 dark:hover:text-brand-300 hover:bg-brand-50 dark:hover:bg-white/5 ${
+                      isHome && activeId === link.href.slice(1)
+                        ? 'text-brand-700 dark:text-brand-300 bg-brand-50 dark:bg-white/5'
+                        : 'text-ink-800 dark:text-cream-50/90'
+                    }`}
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -67,9 +74,7 @@ export function Navbar() {
             <div className="flex items-center gap-2 sm:gap-3">
               <ThemeToggle />
               <div className="hidden sm:block">
-                <Button size="sm" onClick={() => document.querySelector('#app-preview')?.scrollIntoView({ behavior: 'smooth' })}>
-                  Download App
-                </Button>
+                <DownloadButton size="sm" />
               </div>
               <button
                 onClick={() => setIsDrawerOpen(true)}

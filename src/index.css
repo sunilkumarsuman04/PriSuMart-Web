@@ -4,10 +4,13 @@
 
 :root {
   color-scheme: light;
+  /* Height of the floating download banner (set by DownloadBanner.tsx). */
+  --banner-h: 0px;
 }
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 4.5rem;
   -webkit-text-size-adjust: 100%;
 }
 

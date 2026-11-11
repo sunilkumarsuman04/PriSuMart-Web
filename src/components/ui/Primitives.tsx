@@ -18,7 +18,7 @@ export function SectionHeading({ eyebrow, title, description, align = 'center', 
     <div className={`flex flex-col gap-3 ${alignClass} max-w-2xl ${align === 'center' ? 'mx-auto' : ''} mb-12 lg:mb-16`}>
       {eyebrow && (
         <span
-          className={`text-xs font-display font-bold uppercase tracking-[0.18em] px-3 py-1 rounded-full ${
+          className={`text-sm font-display font-semibold px-3.5 py-1 rounded-full ${
             light ? 'bg-white/10 text-sun-300' : 'bg-sun-100 text-sun-700 dark:bg-sun-900/30 dark:text-sun-400'
           }`}
         >

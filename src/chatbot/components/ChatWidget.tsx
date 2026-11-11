@@ -13,7 +13,7 @@ export function ChatWidget() {
       <AnimatePresence>
         {isOpen && <ChatPanel panelId={PANEL_ID} onClose={() => setIsOpen(false)} />}
       </AnimatePresence>
-      <div className={`fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom))] right-4 sm:right-6 z-[90] ${isOpen ? 'max-md:hidden' : ''}`}>
+      <div className={`fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom)+var(--banner-h,0px))] transition-[bottom] duration-300 right-4 sm:right-6 z-[90] ${isOpen ? 'max-md:hidden' : ''}`}>
         <LauncherButton isOpen={isOpen} onToggle={() => setIsOpen((prev) => !prev)} />
       </div>
     </>

@@ -9,8 +9,8 @@ export function OtherApps() {
       <Container>
         <SectionHeading
           eyebrow="From Our Team"
-          title="More apps, coming from PriSuMart"
-          description="We're building a small family of useful apps. This space will grow as new ones launch."
+          title="More from the PriSuMart team"
+          description="We're building a small family of useful apps. This space will grow with every new app we release."
         />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 max-w-4xl mx-auto">

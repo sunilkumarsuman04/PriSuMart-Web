@@ -2,6 +2,7 @@ import { HiOutlineEnvelope, HiOutlinePhone, HiOutlineMapPin } from 'react-icons/
 import { FaInstagram, FaFacebookF, FaTwitter, FaLinkedinIn } from 'react-icons/fa';
 import { SectionHeading, Container } from '../ui/Primitives';
 import { Reveal } from '../shared/Reveal';
+import { StoreBadge } from '../shared/StoreBadge';
 import { ContactForm } from './ContactForm';
 import { SITE, SOCIAL_LINKS } from '../../data/site';
 
@@ -30,8 +31,15 @@ export function Contact() {
 
         <div className="grid lg:grid-cols-[0.85fr_1.15fr] gap-8 lg:gap-12">
           {/* Contact info */}
-          <Reveal>
+          <Reveal className="min-w-0">
             <div className="flex flex-col gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4 p-5 rounded-2xl bg-grad-brand text-white shadow-glow-green">
+                <div className="flex-1 min-w-0">
+                  <div className="font-display font-bold text-lg leading-snug">Get PriSuMart on your phone</div>
+                  <p className="text-sm text-white/80 mt-1">Order groceries and track your delivery right from the app.</p>
+                </div>
+                <StoreBadge variant="light" className="shrink-0 self-start sm:self-auto" />
+              </div>
               {CONTACT_INFO.map((item) => {
                 const Icon = item.icon;
                 const content = (
@@ -39,11 +47,11 @@ export function Contact() {
                     <div className="h-11 w-11 shrink-0 rounded-xl bg-brand-50 dark:bg-brand-900/30 flex items-center justify-center text-brand-600 dark:text-brand-300 text-xl">
                       <Icon />
                     </div>
-                    <div>
-                      <div className="text-xs font-semibold uppercase tracking-wide text-ink-800/50 dark:text-cream-50/45 mb-0.5">
+                    <div className="min-w-0">
+                      <div className="text-sm font-medium text-ink-800/55 dark:text-cream-50/50 mb-0.5">
                         {item.label}
                       </div>
-                      <div className="text-[15px] font-medium text-ink-900 dark:text-cream-50">{item.value}</div>
+                      <div className="text-[15px] font-medium text-ink-900 dark:text-cream-50 break-words">{item.value}</div>
                     </div>
                   </div>
                 );
@@ -57,7 +65,7 @@ export function Contact() {
               })}
 
               <div className="p-5 rounded-2xl bg-white dark:bg-ink-900 border border-ink-900/5 dark:border-white/10 shadow-soft">
-                <div className="text-xs font-semibold uppercase tracking-wide text-ink-800/50 dark:text-cream-50/45 mb-3">
+                <div className="text-sm font-medium text-ink-800/55 dark:text-cream-50/50 mb-3">
                   Follow us
                 </div>
                 <div className="flex gap-3">
@@ -82,7 +90,7 @@ export function Contact() {
           </Reveal>
 
           {/* Form */}
-          <Reveal delay={0.1}>
+          <Reveal delay={0.1} className="min-w-0">
             <div className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-ink-900 border border-ink-900/5 dark:border-white/10 shadow-card">
               <ContactForm />
             </div>
