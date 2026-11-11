@@ -49,6 +49,6 @@ export const APP_CONFIG = {
   poweredBy: {
     prefix: 'Powered by',
     name: 'AshPro InfoTech',
-    url: 'ashpro.prisumart.in',
+    url: 'https://ashpro.prisumart.in',
   },
 } as const;
